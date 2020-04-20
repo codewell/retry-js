@@ -13,15 +13,13 @@ npm install @codewell/retry
 ```JavaScript
 import retry from '@codewell/retry';
 
-const foo = (name) => {
-  console.log("Hello", name);
-}
-
 const options = { maxTries: 3 };
 
-// If foo fails, retry will retry to
-// call foo for 3 times.
-retry(foo, options)("Optimus Prime");
+// If fetch("http://example.com") fails,
+// retry will retry to call
+// fetch("http://example.com") for 3 times
+// before it gives up
+retry(fetch, options)("http://example.com");
 ```
 
 ### Options
