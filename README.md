@@ -1,6 +1,6 @@
 # @codewell/retry
 
-Recursively retries a function if it fails
+Recursively retries to call a function if the execution fails.
 
 ## Installation
 
@@ -13,22 +13,36 @@ npm install @codewell/retry
 ```JavaScript
 import retry from '@codewell/retry';
 
-const options = { maxTries: 3 };
+retry(fetch)("http://example.com");
+```
 
-// If fetch("http://example.com") fails,
-// retry will retry to call
-// fetch("http://example.com") for 3 times
-// before it gives up
+`retry` will make the function call `fetch("http://example.com")`. If it fails, `retry` will try to call `fetch("http://example.com")` for 3 times (default) before it gives up.
+
+### Configuration
+
+`retry` is also configurable with options:
+
+```JavaScript
+import retry from '@codewell/retry';
+
+const options = {
+  // Number of tries before we stop
+  maxTries: 3, // <- Default value
+
+  // A function that determines the
+  // delay of the refetch.
+  delay: (tries) => 1000, // <- Default function returns (1s)
+
+  // Parameter from 0-2 that sets
+  // how much logging retry should do.
+  logLevel: 1, // <- Default value
+
+};
+
 retry(fetch, options)("http://example.com");
 ```
 
-### Options
-
-| key        |  description                      | default           |
-| :--------- | :-------------------------------- | :---------------- |
-| `maxTries` | number of tries before we give up | 3                 |
-| `delay`    | How long to wait before we retry  | `(tries) => 1000` |
-| `logLevel` | 0 - 2, how much we will log       | 1                 |
+The `options` object is optional to pass. All options are optional to configure.
 
 ## Contribution
 
