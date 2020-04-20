@@ -13,7 +13,16 @@ npm install @codewell/retry
 ```JavaScript
 import retry from '@codewell/retry';
 
-retry(fetch)("http://example.com");
+retry(fetch)("http://example.com")
+  .then(data => {
+    // Do something with the returned data,
+    // in this case an http response,
+    // from fetch("http://example.com")
+  })
+  .catch(error => {
+    // This is where we end up if all retries
+    // failed to execute
+  });
 ```
 
 `retry` will make the function call `fetch("http://example.com")`. If it fails, `retry` will try to call `fetch("http://example.com")` for 3 times (default) before it gives up.
