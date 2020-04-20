@@ -1,11 +1,11 @@
-const logError = (func, logLevel) => (error, args, tries) => {
+const logError = (func, logLevel) => (error, args, retryCount) => {
   switch (logLevel) {
     case 1: {
-      console.warn(`[Try ${tries}]: Failed to execute "${func.name}"`);
+      console.warn(`[Retry ${retryCount}]: Failed to execute "${func.name}"`);
       break;
     }
     case 2: {
-      console.warn(`[Try ${tries}]: Failed to execute "${func.name}"`);
+      console.warn(`[Retry ${retryCount}]: Failed to execute "${func.name}"`);
       if (args.includes(null) || args.includes(undefined)) {
         console.warn(`Some of your arguments include undefined or null`);
       }
@@ -20,28 +20,28 @@ const logError = (func, logLevel) => (error, args, tries) => {
 
 const defaultOptions = {
   maxTries: 3,
-  delay: (tries) => 1000, // Wait one second as default,
+  backoffStrategy: (retryCount) => 1000, // Wait one second as default,
   logLevel: 1, // 0 - 2,
 };
 
 const retry = (func, options = {}) => {
-  const { maxTries, delay, logLevel } = {
+  const { maxTries, backoffStrategy, logLevel } = {
     ...defaultOptions,
     ...options,
   };
 
   const logger = logError(func, logLevel);
 
-  const functionCaller = (tries) => async (...args) => {
-    if (tries < maxTries) {
+  const functionCaller = (retryCount) => async (...args) => {
+    if (retryCount < maxTries) {
       try {
         return await func(...args);
       } catch (error) {
-        logger(error, args, tries);
+        logger(error, args, retryCount);
 
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            functionCaller(tries + 1)(...args)
+            functionCaller(retryCount + 1)(...args)
               .then((result) => {
                 resolve(result);
               })
@@ -49,7 +49,7 @@ const retry = (func, options = {}) => {
                 // This is the last depth
                 reject(error);
               });
-          }, delay(tries));
+          }, backoffStrategy(retryCount));
         });
       }
     } else {

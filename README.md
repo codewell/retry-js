@@ -38,9 +38,10 @@ const options = {
   // Number of tries before we stop
   maxTries: 3, // <- Default value
 
-  // A function that determines the
-  // delay of the refetch.
-  delay: (tries) => 1000, // <- Default function returns (1s)
+  // A function that returns number
+  // of milliseconds to wait before
+  // next execution
+  backoffStrategy: (retryCount) => 1000, // <- Default function returns (1s)
 
   // Parameter from 0-2 that sets
   // how much logging retry should do.

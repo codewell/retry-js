@@ -55,7 +55,7 @@ test("Test a success with async func (prod)", (done) => {
 
 test("Test a failure (dev)", (done) => {
   console.warn = jest.fn();
-  const options = { maxTries: 5, delay: (tries) => 100 };
+  const options = { maxTries: 5, backoffStrategy: (tries) => 100 };
   devLib(
     foo,
     options,
@@ -71,7 +71,7 @@ test("Test a failure (dev)", (done) => {
 
 test("Test a failure (prod)", (done) => {
   console.warn = jest.fn();
-  const options = { maxTries: 5, delay: (tries) => 100 };
+  const options = { maxTries: 5, backoffStrategy: (tries) => 100 };
   prodLib(
     foo,
     options,
