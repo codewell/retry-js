@@ -36,17 +36,19 @@ import retry from '@codewell/retry';
 
 const options = {
   // Number of tries before we stop
-  maxTries: 3, // <- Default value
+  // Default value: 3
+  maxTries: 3,
 
   // A function that returns number
   // of milliseconds to wait before
   // next execution
-  backoffStrategy: (retryCount) => 1000, // <- Default function returns (1s)
+  // Default function: (retryCount) => 1000
+  backoffStrategy: (retryCount) => 1000,
 
   // Parameter from 0-2 that sets
   // how much logging retry should do.
-  logLevel: 1, // <- Default value
-
+  // Default value: 1
+  logLevel: 1,
 };
 
 retry(fetch, options)("http://example.com");
